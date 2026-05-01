@@ -334,6 +334,24 @@ struct error_tracer {
 	u_int32_t err_count;
 };
 
+struct vdfs4_dlink_info {
+	int dlink_count;
+	u64 dlink_inode_comp;
+	int dlink_file_comp_fd;
+	char *dl_name_comp;
+	u64 dlink_inode_auth;
+	int dlink_file_auth;
+	char *dl_name_auth;
+	u64 dlink_inode_ro_auth;
+	int dlink_file_ro_auth;
+	char *dl_name_ro_auth;
+	u64 dlink_signed;
+	int dlink_file_signed;
+	char *dl_name_signed;
+	int dlink_file_fd;
+	char *dl_name;
+};
+
 /** @brief	Maintains private super block information.
  */
 struct vdfs4_sb_info {
@@ -452,6 +470,9 @@ struct vdfs4_sb_info {
 	/* Profiling data (vdfs-squeeze) */
 	char *profiling_data_path;
 	struct list_head prof_data;
+
+	/* Datalink unpack state */
+	struct vdfs4_dlink_info dl_inf;
 };
 
 struct profiled_file {

@@ -367,7 +367,7 @@ static int check_and_create_dst(struct vdfs_image_info *img_info)
 		return -EINVAL;
 
 	ret = check_file_before_compress(img_info->src_filename,
-			img_info->cmdline & CMD_COMPRESS, &src_mode);
+			img_info->cmdline & CMD_COMPRESS, &src_mode, -1);
 	if (ret) {
 		if (ret == -ENOTCOMPR)
 			log_error("File %s size is too small. Can't compress",
@@ -400,9 +400,9 @@ static int compress_file(struct vdfs_image_info *img_info)
 		ret = encode_file(NULL, img_info->src_filename, dst_fd,
 			img_info->cmdline & CMD_COMPRESS,
 			img_info->compress_type,
-			&file_size, img_info->rsa_key, 0,
+			&file_size, img_info->rsa_key,
 			img_info->log_chunk_size, "/tmp", NULL, -1,
-			img_info->hash_alg, img_info->hash_len);
+			img_info->hash_alg, img_info->hash_len, 0, NULL);
 		close(dst_fd);
 		if (ret) {
 			if (ret == -ENOTCOMPR)
@@ -436,7 +436,7 @@ static int decompress_file(struct vdfs_image_info *img_info)
 
 	ret = decode_file(img_info->src_filename, dst_fd,
 			img_info->cmdline & CMD_DECOMPRESS,
-			&flags);
+			&flags, NULL);
 
 	close(dst_fd);
 	return ret;
@@ -517,7 +517,7 @@ static int get_file_info(struct vdfs_image_info *info)
 		return -errno;
 	ret = analyse_existing_file(fd, &compress_type,
 			&chunks_num, &src_file_size, &data_area_size, &extents,
-			&is_authenticated, &log_chunk_size);
+			&is_authenticated, &log_chunk_size, NULL);
 
 	if (ret)
 		goto exit;

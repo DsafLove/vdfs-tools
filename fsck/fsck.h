@@ -88,11 +88,11 @@
 
 #define VOLUME_UID_SIZE 16
 
-char *fsck_checked_magics[FSCK_CHECKED_METADATA_ELS];
-int fsck_checked_magics_len[FSCK_CHECKED_METADATA_ELS];
-struct vdfs4_btree *fsck_checked_trees[FSCK_NUM_OF_CHECKED_TREES];
-int fsck_checked_inos[FSCK_CHECKED_METADATA_ELS];
-int fsck_checked_crc_size[FSCK_CHECKED_METADATA_ELS];
+extern char *fsck_checked_magics[FSCK_CHECKED_METADATA_ELS];
+extern int fsck_checked_magics_len[FSCK_CHECKED_METADATA_ELS];
+extern struct vdfs4_btree *fsck_checked_trees[FSCK_NUM_OF_CHECKED_TREES];
+extern int fsck_checked_inos[FSCK_CHECKED_METADATA_ELS];
+extern int fsck_checked_crc_size[FSCK_CHECKED_METADATA_ELS];
 
 
 /**

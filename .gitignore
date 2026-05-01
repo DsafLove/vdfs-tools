@@ -1,0 +1,13 @@
+*.o
+*.d
+mkfs.vdfs
+unpack.vdfs
+fsck.vdfs
+tune.vdfs
+info.vdfs
+page-types.vdfs
+btrtst
+test
+zlib/zlib-*/
+lzolib/lzo-*/
+openssl/openssl-*/

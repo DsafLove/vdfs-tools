@@ -59,66 +59,13 @@ int fsck_checked_inos[FSCK_CHECKED_METADATA_ELS] = {
 	VDFS4_XATTR_TREE_INO
 };
 
+struct vdfs4_btree *fsck_checked_trees[FSCK_NUM_OF_CHECKED_TREES];
+
 int parse_debug_area(struct vdfs4_fsck_superblock_info *fsck_info)
 {
-	struct vdfs4_debug_record *debug_area_curr_rec_addr;
-	int is_oops_area_present, ret = 0;
-	void *debug_area_raw = malloc(DEBUG_AREA_DEFAULT_SIZE *
-			fsck_info->sbi.block_size);
-
-	if (!debug_area_raw)
-		return -ENOMEM;
-
-	struct vdfs4_debug_descriptor *debug_descriptor =
-			(struct vdfs4_debug_descriptor *)debug_area_raw;
-
-	ret = vdfs4_read_blocks(&fsck_info->sbi, DEBUG_AREA_DEFAULT_START,
-			debug_area_raw, DEBUG_AREA_DEFAULT_SIZE);
-
-	if (ret) {
-		free(debug_area_raw);
-		log_error("Can't read debug area\n");
-		return -ERDFAIL;
-	}
-
-	is_oops_area_present = !(strncmp((char *) debug_descriptor->signature,
-			VDFS4_OOPS_MAGIC, sizeof(VDFS4_OOPS_MAGIC) - 1));
-
-	if (!is_oops_area_present) {
-		free(debug_area_raw);
-		log_info("There is no debug area on this volume\n");
-		return EXIT_SUCCESS;
-	}
-
-	debug_area_curr_rec_addr = (struct vdfs4_debug_record *)
-		((char *)debug_descriptor + sizeof(*debug_descriptor));
-
-	printf("%10s%10s%10s%10s%10s%10s%3s%20.20s%6s\n", "UUID",
-					"Fail num",
-					"Err code",
-					"Fail time", "Mnt ctr",
-					"Sync ctr", "   ", "Func name",
-					"Line");
-
-	while ((u32)((char *)debug_area_curr_rec_addr - (char *)debug_area_raw)
-		<= (u32)(DEBUG_AREA_DEFAULT_SIZE *
-				(fsck_info->sbi.block_size))) {
-
-		printf("%10llu%10hd%10d%10d%10d%10d%3s%20.20s%6s\n",
-				debug_area_curr_rec_addr->uuid,
-				debug_area_curr_rec_addr->fail_number,
-				debug_area_curr_rec_addr->error_code,
-				debug_area_curr_rec_addr->fail_time,
-				debug_area_curr_rec_addr->mount_count,
-				debug_area_curr_rec_addr->sync_count, "   ",
-				debug_area_curr_rec_addr->function,
-				debug_area_curr_rec_addr->line);
-
-		debug_area_curr_rec_addr++;
-	}
-
-	free(debug_area_raw);
-	return EXIT_SUCCESS;
+	(void)fsck_info;
+	log_error("Debug area parsing is not supported in this build\n");
+	return -ENOTSUP;
 }
 
 /* TODO Refactor */
@@ -506,7 +453,7 @@ int add_metadata_to_calculated_inode_bmap(struct vdfs4_fsck_superblock_info
 int determine_end_bit_of_space_bitmap(struct vdfs4_fsck_superblock_info
 		*fsck_info, int *end_bit)
 {
-	*end_bit = fsck_info->sbi.image_size / fsck_info->sbi.block_size;
+	*end_bit = fsck_info->sbi.image_file_size / fsck_info->sbi.block_size;
 	return EXIT_SUCCESS;
 }
 
@@ -747,7 +694,7 @@ int initialize_sb_info(struct vdfs4_sb_info *sbi)
 	}
 	sbi->super_page_size = 1 << sb.log_super_page_size;
 	sbi->block_size = 1 << sb.log_block_size;
-	sbi->image_size = esb.volume_blocks_count << sb.log_block_size;
+	sbi->image_file_size = esb.volume_blocks_count << sb.log_block_size;
 
 	if (sb.read_only) {
 		log_info("Read only image\n");
@@ -756,7 +703,7 @@ int initialize_sb_info(struct vdfs4_sb_info *sbi)
 		SET_FLAG(sbi->service_flags, READ_ONLY_IMAGE);
 	} else
 		log_info("Volume created with size %llu Kb\n",
-				(__u64) sbi->image_size >> 10);
+				(__u64) sbi->image_file_size >> 10);
 	sbi->esb = esb;
 	sbi->sb = sb;
 	return EXIT_SUCCESS;

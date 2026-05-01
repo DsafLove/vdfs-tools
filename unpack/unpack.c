@@ -20,6 +20,7 @@
  */
 
 #include <assert.h>
+#include <sys/sysmacros.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <fcntl.h>
@@ -258,19 +259,16 @@ int init_sb_info(struct vdfs4_sb_info *sbi)
 			strlen(VDFS4_LAYOUT_VERSION))) {
 		if (atoi((const char *)sb->layout_version) > 0)
 			VDFS4_ERR("Invalid mkfs layout version: %.4s\n"
-			"git branch - %s\ngit hash - %s\n"
+			"mkfs version - %.64s\n"
 			"unpack uses %.4s version\n",
 			sb->layout_version,
-			sb->mkfs_git_branch, sb->mkfs_git_hash,
+			sb->mkfs_version,
 			VDFS4_LAYOUT_VERSION);
 		else
 			VDFS4_ERR("Old mkfs layout\n"
-				"git branch - %s\ngit hash - %s\n"
+				"mkfs version - %.64s\n"
 				"unpack uses %.4s version\n",
-				((struct old_vdfs4_super_block *)
-						sb)->mkfs_git_branch,
-				((struct old_vdfs4_super_block *)
-						sb)->mkfs_git_hash,
+				sb->mkfs_version,
 				VDFS4_LAYOUT_VERSION);
 		free(first_block);
 		return -EINVAL;
@@ -717,7 +715,7 @@ int create_decompress_file(struct vdfs4_sb_info *sbi, char *name,
 
 	ret = decode_file(gathered_name, dst_fd,
 			file_rec->common.flags & (1 << VDFS4_COMPRESSED_FILE),
-			&flags);
+			&flags, NULL);
 	file_rec->common.flags |= flags;
 
 	close(dst_fd);
