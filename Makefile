@@ -122,7 +122,7 @@ OBJ_INFO = $(SOURCE_INFO:.c=.o)
 OBJ_KEY = $(SOURCE_KEY:.c=.o)
 
 unpack: CFLAGS += -D__RD_FROM_VOL__
-fsck: CFLAGS += -D__RD_FROM_VOL__ -fcommon
+fsck: CFLAGS += -D__RD_FROM_VOL__
 btrtst: CFLAGS += -DCONFIG_VDFS4_DEBUG_TOOLS_GET_BNODE
 
 all: mkfs unpack tune fsck info

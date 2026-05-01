@@ -367,7 +367,7 @@ static int check_and_create_dst(struct vdfs_image_info *img_info)
 		return -EINVAL;
 
 	ret = check_file_before_compress(img_info->src_filename,
-			img_info->cmdline & CMD_COMPRESS, &src_mode, 0);
+			img_info->cmdline & CMD_COMPRESS, &src_mode, -1);
 	if (ret) {
 		if (ret == -ENOTCOMPR)
 			log_error("File %s size is too small. Can't compress",

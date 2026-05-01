@@ -59,11 +59,13 @@ int fsck_checked_inos[FSCK_CHECKED_METADATA_ELS] = {
 	VDFS4_XATTR_TREE_INO
 };
 
+struct vdfs4_btree *fsck_checked_trees[FSCK_NUM_OF_CHECKED_TREES];
+
 int parse_debug_area(struct vdfs4_fsck_superblock_info *fsck_info)
 {
 	(void)fsck_info;
-	log_info("Debug area parsing is not supported in this build\n");
-	return EXIT_SUCCESS;
+	log_error("Debug area parsing is not supported in this build\n");
+	return -ENOTSUP;
 }
 
 /* TODO Refactor */
