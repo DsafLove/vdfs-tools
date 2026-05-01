@@ -559,7 +559,7 @@ struct vdfs4_meta_block {
 #define VDFS4_CATALOG_FOLDER_RECORD		0x01
 #define VDFS4_CATALOG_FILE_RECORD		0x02
 #define VDFS4_CATALOG_HLINK_RECORD		0x03
-/* UNUSED:								0x04 */
+#define VDFS4_CATALOG_DLINK_RECORD		0x04
 #define VDFS4_CATALOG_ILINK_RECORD		0x05
 #define VDFS4_CATALOG_UNPACK_INODE		0x10
 
@@ -645,6 +645,17 @@ struct vdfs4_catalog_file_record {
 		/** Fork containing info about area occupied by file */
 		struct vdfs4_fork	data_fork;
 	};
+};
+
+/**
+ * @brief	On-disk structure to hold datalink records in catalog btree.
+ */
+struct vdfs4_catalog_dlink_record {
+	/** Common part of record (file or folder) */
+	struct vdfs4_catalog_folder_record common;
+	__le64 data_inode;
+	__le64 data_offset;
+	__le64 data_length;
 };
 
 /**

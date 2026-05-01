@@ -129,7 +129,7 @@ int is_fork_corrupted(struct vdfs4_fork *fk,
 int is_extent_corrupted(struct vdfs4_extent *extnt,
 	struct vdfs4_fsck_superblock_info *fsck_info)
 {
-	__u32 end_bit = fsck_info->sbi.image_size /
+	__u32 end_bit = fsck_info->sbi.image_file_size /
 		fsck_info->sbi.block_size;
 	if (extnt->begin + extnt->length > end_bit)
 		return -EINVAL;
