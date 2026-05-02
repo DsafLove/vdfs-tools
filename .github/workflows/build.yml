@@ -13,11 +13,12 @@ jobs:
       - name: Configure Fast APT Mirror
         uses: vegardit/fast-apt-mirror.sh@1.4.4
         with:
-          healthchecks: 10
-          speedtests: 2
+          healthchecks: 20
+          speedtests: 10
           parallel: 2
           sample-size: 1024
-          sample-time: 2
+          sample-time: 3
+          country: ""
           exclude-current: false
 
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
