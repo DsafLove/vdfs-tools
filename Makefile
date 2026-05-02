@@ -125,7 +125,7 @@ unpack: CFLAGS += -D__RD_FROM_VOL__
 fsck: CFLAGS += -D__RD_FROM_VOL__
 btrtst: CFLAGS += -DCONFIG_VDFS4_DEBUG_TOOLS_GET_BNODE
 
-all: mkfs unpack tune fsck info
+all: mkfs unpack tune fsck
 
 openssl: $(OPENSSL_PACK)
 	@if [ ! -d $(OPENSSL_DIR) ]; then tar -xf $(OPENSSL_PACK) -C $(OPENSSL_BASE); cd $(OPENSSL_DIR); ./Configure no-shared no-asm linux-elf --cross-compile-prefix=$(CROSS_COMPILE) $(SECURE_CFLAGS); make build_crypto; fi
