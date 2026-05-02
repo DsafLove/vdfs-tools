@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Configure Fast APT Mirror
         uses: vegardit/fast-apt-mirror.sh@1.4.4
@@ -18,10 +18,10 @@ jobs:
           parallel: 2
           sample-size: 1024
           sample-time: 3
-          country: ""
-          exclude-current: false
+          country: "DE"
+          exclude-current: true
 
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@v6.0.2
 
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential perl
@@ -36,7 +36,7 @@ jobs:
         run: strip mkfs.vdfs unpack.vdfs tune.vdfs fsck.vdfs
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: vdfs-tools-linux-x86_64
           path: |
@@ -48,12 +48,12 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      - uses: actions/download-artifact@v8.0.1
         with:
           name: vdfs-tools-linux-x86_64
 
@@ -64,7 +64,7 @@ jobs:
             mkfs.vdfs unpack.vdfs tune.vdfs fsck.vdfs
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        uses: softprops/action-gh-release@v3.0.0
         with:
           files: vdfs-tools-linux-x86_64-${{ github.ref_name }}.tar.gz
           generate_release_notes: true
