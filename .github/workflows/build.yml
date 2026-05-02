@@ -10,6 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
+      - name: Configure Fast APT Mirror
+        uses: vegardit/fast-apt-mirror.sh@1.4.4
+        with:
+          healthchecks: 10
+          speedtests: 2
+          parallel: 2
+          sample-size: 1024
+          sample-time: 2
+          exclude-current: false
+
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install build dependencies
